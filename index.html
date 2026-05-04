@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Summit County — Motivated Seller Leads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+/* ── Reset + Variables ─────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:      #0d0f14;
+  --surface: #13161d;
+  --border:  #222535;
+  --accent:  #e8b84b;
+  --accent2: #4b8de8;
+  --danger:  #e85555;
+  --muted:   #6b7280;
+  --text:    #e2e4e9;
+  --text-dim:#9aa0ad;
+  --green:   #3ecf7a;
+  --orange:  #f0893a;
+}
+
+html{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;scroll-behavior:smooth}
+body{min-height:100vh}
+
+/* ── Layout ────────────────────────────────────────────────────────────── */
+.shell{display:grid;grid-template-rows:auto auto 1fr auto;min-height:100vh}
+
+/* ── Header ────────────────────────────────────────────────────────────── */
+header{
+  background:linear-gradient(135deg,#0d0f14 0%,#161a25 100%);
+  border-bottom:1px solid var(--border);
+  padding:0 2rem;
+}
+.header-inner{
+  max-width:1400px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  height:64px;
+}
+.logo{
+  font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:900;
+  letter-spacing:-.02em;color:var(--accent);
+}
+.logo span{color:var(--text);font-weight:700}
+.meta-bar{display:flex;gap:1.5rem;align-items:center}
+.meta-item{font-size:.78rem;color:var(--text-dim);font-family:'DM Mono',monospace}
+.meta-item strong{color:var(--accent);font-weight:500}
+.badge-live{
+  display:inline-flex;align-items:center;gap:.4rem;
+  background:#1a2a1a;border:1px solid #2a5a2a;border-radius:999px;
+  padding:.2rem .7rem;font-size:.72rem;color:var(--green);font-family:'DM Mono',monospace;
+}
+.badge-live::before{
+  content:'';width:7px;height:7px;border-radius:50%;
+  background:var(--green);animation:pulse 1.8s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── Stats bar ─────────────────────────────────────────────────────────── */
+.stats-bar{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:.75rem 2rem;
+}
+.stats-inner{
+  max-width:1400px;margin:0 auto;
+  display:flex;gap:2rem;flex-wrap:wrap;align-items:center;
+}
+.stat{display:flex;flex-direction:column;align-items:flex-start}
+.stat-val{font-size:1.5rem;font-weight:700;font-family:'DM Mono',monospace;color:var(--accent);line-height:1}
+.stat-lbl{font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-top:.2rem}
+.stat-sep{width:1px;height:2.5rem;background:var(--border);align-self:center}
+
+/* ── Main container ────────────────────────────────────────────────────── */
+.container{max-width:1400px;margin:0 auto;padding:1.5rem 2rem}
+
+/* ── Controls ──────────────────────────────────────────────────────────── */
+.controls{
+  display:flex;gap:1rem;flex-wrap:wrap;align-items:center;
+  margin-bottom:1.5rem;
+}
+.search-wrap{position:relative;flex:1;min-width:220px}
+.search-wrap input{
+  width:100%;background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:.55rem 1rem .55rem 2.4rem;
+  color:var(--text);font-size:.85rem;outline:none;
+  transition:border .15s;
+}
+.search-wrap input:focus{border-color:var(--accent)}
+.search-icon{position:absolute;left:.75rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.9rem}
+select.filter-select{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  color:var(--text);font-size:.85rem;padding:.55rem .85rem;outline:none;cursor:pointer;
+  transition:border .15s;
+}
+select.filter-select:focus{border-color:var(--accent)}
+.btn{
+  border:none;border-radius:8px;cursor:pointer;font-size:.82rem;
+  font-weight:500;padding:.55rem 1.1rem;transition:all .15s;white-space:nowrap;
+}
+.btn-accent{background:var(--accent);color:#111}
+.btn-accent:hover{filter:brightness(1.1)}
+.btn-ghost{background:var(--surface);color:var(--text);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── Table ─────────────────────────────────────────────────────────────── */
+.table-wrap{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;
+}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+thead th{
+  background:#0f1219;padding:.75rem 1rem;text-align:left;
+  font-family:'DM Mono',monospace;font-size:.72rem;
+  text-transform:uppercase;letter-spacing:.06em;color:var(--text-dim);
+  border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;
+  user-select:none;
+}
+thead th:hover{color:var(--accent)}
+thead th .sort-icon{margin-left:.3rem;opacity:.4}
+thead th.sorted .sort-icon{opacity:1;color:var(--accent)}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:#181b24}
+td{padding:.7rem 1rem;vertical-align:middle}
+td.doc-num{font-family:'DM Mono',monospace;font-size:.78rem;color:var(--accent);white-space:nowrap}
+td.doc-type{white-space:nowrap}
+td.filed{font-family:'DM Mono',monospace;font-size:.78rem;color:var(--text-dim);white-space:nowrap}
+td.owner{max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+td.address{max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-dim)}
+td.amount{font-family:'DM Mono',monospace;text-align:right;white-space:nowrap}
+td.score-cell{white-space:nowrap}
+td.flags-cell{max-width:220px}
+td.actions{white-space:nowrap;text-align:center}
+
+/* ── Score pill ────────────────────────────────────────────────────────── */
+.score-pill{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:40px;height:24px;border-radius:6px;font-family:'DM Mono',monospace;
+  font-size:.78rem;font-weight:500;
+}
+.score-hi {background:#1d3a24;color:var(--green)}
+.score-med{background:#3a2a12;color:var(--orange)}
+.score-lo {background:#2a1515;color:var(--danger)}
+
+/* ── Flag chips ────────────────────────────────────────────────────────── */
+.flags{display:flex;flex-wrap:wrap;gap:.3rem}
+.flag{
+  font-size:.65rem;border-radius:4px;padding:.15rem .4rem;
+  white-space:nowrap;font-family:'DM Mono',monospace;letter-spacing:.02em;
+}
+.flag-lp    {background:#1e2a3a;color:var(--accent2)}
+.flag-fc    {background:#2a1818;color:var(--danger)}
+.flag-jud   {background:#2a1e10;color:var(--orange)}
+.flag-tax   {background:#1e2a1e;color:var(--green)}
+.flag-mech  {background:#25172a;color:#c084f5}
+.flag-probate{background:#1a2a2a;color:#67d9d9}
+.flag-llc   {background:#2a2a10;color:#d4d467}
+.flag-new   {background:var(--accent);color:#111}
+.flag-addr  {background:#1e2a3a;color:#7eb8f0}
+.flag-default{background:#1e1e2a;color:var(--text-dim)}
+
+/* ── Category badge ────────────────────────────────────────────────────── */
+.cat-badge{
+  display:inline-block;font-family:'DM Mono',monospace;font-size:.7rem;
+  border-radius:5px;padding:.15rem .45rem;border:1px solid;white-space:nowrap;
+}
+
+/* ── Link button ────────────────────────────────────────────────────────── */
+.link-btn{
+  display:inline-flex;align-items:center;gap:.3rem;
+  background:transparent;border:1px solid var(--border);border-radius:6px;
+  color:var(--text-dim);font-size:.75rem;padding:.25rem .6rem;
+  text-decoration:none;transition:all .15s;
+}
+.link-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── Empty / loading states ────────────────────────────────────────────── */
+.empty{
+  text-align:center;padding:4rem 2rem;color:var(--text-dim);
+  font-family:'DM Mono',monospace;font-size:.85rem;
+}
+.loading{
+  display:flex;align-items:center;justify-content:center;gap:.7rem;
+  padding:3rem;color:var(--text-dim);font-family:'DM Mono',monospace;
+}
+.spinner{
+  width:20px;height:20px;border-radius:50%;
+  border:2px solid var(--border);border-top-color:var(--accent);
+  animation:spin .7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Pagination ────────────────────────────────────────────────────────── */
+.pagination{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.85rem 1.25rem;border-top:1px solid var(--border);
+  font-size:.8rem;color:var(--text-dim);
+}
+.page-btns{display:flex;gap:.4rem}
+.page-btn{
+  background:var(--bg);border:1px solid var(--border);border-radius:6px;
+  color:var(--text-dim);padding:.3rem .65rem;cursor:pointer;font-size:.78rem;
+  font-family:'DM Mono',monospace;transition:all .15s;
+}
+.page-btn:hover,.page-btn.active{border-color:var(--accent);color:var(--accent)}
+.page-btn:disabled{opacity:.35;cursor:default}
+
+/* ── Footer ────────────────────────────────────────────────────────────── */
+footer{
+  border-top:1px solid var(--border);padding:1rem 2rem;
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:.72rem;color:var(--muted);
+}
+
+/* ── Modal ─────────────────────────────────────────────────────────────── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;
+  display:flex;align-items:center;justify-content:center;padding:1rem;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  max-width:640px;width:100%;max-height:85vh;overflow-y:auto;
+  padding:2rem;position:relative;
+}
+.modal-close{
+  position:absolute;top:1rem;right:1rem;background:none;border:1px solid var(--border);
+  border-radius:6px;color:var(--text-dim);cursor:pointer;padding:.25rem .55rem;font-size:.9rem;
+}
+.modal-close:hover{color:var(--text);border-color:var(--text)}
+.modal h2{font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:1.2rem;color:var(--accent)}
+.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem 1.5rem;margin-bottom:1.2rem}
+.modal-field label{font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--text-dim);font-family:'DM Mono',monospace}
+.modal-field p{font-size:.85rem;color:var(--text);margin-top:.15rem;word-break:break-word}
+.modal-field.full{grid-column:1/-1}
+.modal-score{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem}
+.score-big{
+  font-family:'DM Mono',monospace;font-size:2.5rem;font-weight:700;
+  color:var(--accent);line-height:1;
+}
+
+/* ── Responsive ────────────────────────────────────────────────────────── */
+@media(max-width:900px){
+  .meta-bar{display:none}
+  .stats-inner{gap:1rem}
+  td.flags-cell,td.address,td.legal{display:none}
+  .container{padding:1rem}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- Header -->
+<header>
+  <div class="header-inner">
+    <div class="logo">SUMMIT<span>LEADS</span></div>
+    <div class="meta-bar">
+      <div class="meta-item">County: <strong>Summit, OH</strong></div>
+      <div class="meta-item">Source: <strong>Clerk Portal</strong></div>
+      <div class="meta-item" id="meta-updated">Updated: <strong>—</strong></div>
+      <div class="badge-live">LIVE</div>
+    </div>
+  </div>
+</header>
+
+<!-- Stats bar -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat"><div class="stat-val" id="s-total">0</div><div class="stat-lbl">Total Leads</div></div>
+    <div class="stat-sep"></div>
+    <div class="stat"><div class="stat-val" id="s-addr">0</div><div class="stat-lbl">With Address</div></div>
+    <div class="stat-sep"></div>
+    <div class="stat"><div class="stat-val" id="s-hi">0</div><div class="stat-lbl">High Score (≥70)</div></div>
+    <div class="stat-sep"></div>
+    <div class="stat"><div class="stat-val" id="s-range">—</div><div class="stat-lbl">Date Range</div></div>
+    <div class="stat-sep"></div>
+    <div class="stat"><div class="stat-val" id="s-showing">0</div><div class="stat-lbl">Showing</div></div>
+    <div style="margin-left:auto;display:flex;gap:.6rem">
+      <button class="btn btn-ghost" onclick="exportCSV()">⬇ Export CSV</button>
+      <button class="btn btn-accent" onclick="loadData()">↺ Refresh</button>
+    </div>
+  </div>
+</div>
+
+<!-- Main -->
+<main class="container">
+
+  <!-- Controls -->
+  <div class="controls">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="q" placeholder="Search owner, address, doc #…" oninput="filterTable()" />
+    </div>
+
+    <select class="filter-select" id="f-cat" onchange="filterTable()">
+      <option value="">All Lead Types</option>
+    </select>
+
+    <select class="filter-select" id="f-score" onchange="filterTable()">
+      <option value="">All Scores</option>
+      <option value="70">Score ≥ 70 (High)</option>
+      <option value="50">Score ≥ 50 (Medium)</option>
+      <option value="0">All</option>
+    </select>
+
+    <select class="filter-select" id="f-addr" onchange="filterTable()">
+      <option value="">Any Address</option>
+      <option value="1">With Address Only</option>
+    </select>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap" id="table-wrap">
+    <div class="loading"><div class="spinner"></div>Loading records…</div>
+  </div>
+
+</main>
+
+<!-- Footer -->
+<footer>
+  <span>Summit County Motivated Seller Lead Dashboard</span>
+  <span>Data: Summit County Clerk of Courts · Updated daily via GitHub Actions</span>
+</footer>
+
+</div><!-- .shell -->
+
+<!-- Detail modal -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal" id="modal-body">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<script>
+// ── State ─────────────────────────────────────────────────────────────────────
+let ALL_RECORDS = [];
+let FILTERED    = [];
+let SORT_COL    = 'score';
+let SORT_DIR    = -1;   // -1=desc, 1=asc
+const PAGE_SIZE = 50;
+let cur_page    = 1;
+
+// ── Category meta ─────────────────────────────────────────────────────────────
+const CAT_COLOR = {
+  LP:'#4b8de8',NOFC:'#e85555',TAXDEED:'#3ecf7a',
+  JUD:'#f0893a',CCJ:'#f0893a',DRJUD:'#f0893a',
+  LNCORPTX:'#3ecf7a',LNIRS:'#3ecf7a',LNFED:'#3ecf7a',
+  LN:'#d4d467',LNMECH:'#c084f5',LNHOA:'#c084f5',
+  MEDLN:'#67d9d9',PRO:'#67d9d9',NOC:'#c084f5',RELLP:'#4b8de8',
+};
+
+const FLAG_CLASS = {
+  'Lis pendens':      'flag-lp',
+  'Pre-foreclosure':  'flag-fc',
+  'Judgment lien':    'flag-jud',
+  'Tax lien':         'flag-tax',
+  'Mechanic lien':    'flag-mech',
+  'Probate / estate': 'flag-probate',
+  'LLC / corp owner': 'flag-llc',
+  'New this week':    'flag-new',
+  'Has address':      'flag-addr',
+};
+
+// ── Load data ─────────────────────────────────────────────────────────────────
+async function loadData() {
+  document.getElementById('table-wrap').innerHTML =
+    '<div class="loading"><div class="spinner"></div>Loading records…</div>';
+  try {
+    const r = await fetch('records.json?t=' + Date.now());
+    const d = await r.json();
+    ALL_RECORDS = d.records || [];
+
+    // Stats
+    document.getElementById('s-total').textContent = d.total || 0;
+    document.getElementById('s-addr').textContent  = d.with_address || 0;
+    document.getElementById('s-hi').textContent    = ALL_RECORDS.filter(x=>x.score>=70).length;
+    if (d.date_range?.start && d.date_range?.end) {
+      document.getElementById('s-range').textContent =
+        d.date_range.start + ' → ' + d.date_range.end;
+    }
+    if (d.fetched_at) {
+      const dt = new Date(d.fetched_at);
+      document.getElementById('meta-updated').innerHTML =
+        'Updated: <strong>' + dt.toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) + '</strong>';
+    }
+
+    // Populate category filter
+    const cats = [...new Set(ALL_RECORDS.map(r=>r.cat).filter(Boolean))].sort();
+    const sel  = document.getElementById('f-cat');
+    sel.innerHTML = '<option value="">All Lead Types</option>' +
+      cats.map(c=>`<option value="${c}">${c} — ${ALL_RECORDS.find(r=>r.cat===c)?.cat_label||''}</option>`).join('');
+
+    filterTable();
+  } catch(e) {
+    document.getElementById('table-wrap').innerHTML =
+      '<div class="empty">⚠ Could not load records.json<br><small>'+e.message+'</small></div>';
+  }
+}
+
+// ── Filter + sort ─────────────────────────────────────────────────────────────
+function filterTable() {
+  const q     = document.getElementById('q').value.toLowerCase();
+  const fCat  = document.getElementById('f-cat').value;
+  const fScore= parseInt(document.getElementById('f-score').value)||0;
+  const fAddr = document.getElementById('f-addr').value;
+
+  FILTERED = ALL_RECORDS.filter(r => {
+    if (fCat && r.cat !== fCat) return false;
+    if (r.score < fScore) return false;
+    if (fAddr === '1' && !r.prop_address) return false;
+    if (q) {
+      const haystack = [r.owner,r.doc_num,r.prop_address,r.mail_address,
+                        r.cat_label,r.grantee,r.legal].join(' ').toLowerCase();
+      if (!haystack.includes(q)) return false;
+    }
+    return true;
+  });
+
+  // Sort
+  FILTERED.sort((a,b) => {
+    let va = a[SORT_COL], vb = b[SORT_COL];
+    if (SORT_COL === 'amount') { va=va||0; vb=vb||0; }
+    if (va < vb) return SORT_DIR;
+    if (va > vb) return -SORT_DIR;
+    return 0;
+  });
+
+  cur_page = 1;
+  document.getElementById('s-showing').textContent = FILTERED.length;
+  renderTable();
+}
+
+// ── Sort handler ──────────────────────────────────────────────────────────────
+function sortBy(col) {
+  if (SORT_COL === col) SORT_DIR *= -1;
+  else { SORT_COL = col; SORT_DIR = -1; }
+  document.querySelectorAll('thead th').forEach(th => {
+    th.classList.remove('sorted');
+    th.querySelector('.sort-icon').textContent = '↕';
+  });
+  const th = document.querySelector(`th[data-col="${col}"]`);
+  if (th) {
+    th.classList.add('sorted');
+    th.querySelector('.sort-icon').textContent = SORT_DIR === -1 ? '↓' : '↑';
+  }
+  filterTable();
+}
+
+// ── Render table ──────────────────────────────────────────────────────────────
+function renderTable() {
+  const wrap = document.getElementById('table-wrap');
+  if (!FILTERED.length) {
+    wrap.innerHTML = '<div class="empty">No records match the current filters.</div>';
+    return;
+  }
+
+  const start = (cur_page-1)*PAGE_SIZE;
+  const page  = FILTERED.slice(start, start+PAGE_SIZE);
+  const total_pages = Math.ceil(FILTERED.length/PAGE_SIZE);
+
+  const cols = [
+    {key:'doc_num',   label:'Doc #'},
+    {key:'cat',       label:'Type'},
+    {key:'filed',     label:'Filed'},
+    {key:'owner',     label:'Owner'},
+    {key:'prop_address',label:'Property'},
+    {key:'amount',    label:'Amount'},
+    {key:'score',     label:'Score'},
+    {key:'flags',     label:'Flags'},
+    {key:'_actions',  label:''},
+  ];
+
+  let html = `
+  <table>
+    <thead>
+      <tr>
+        ${cols.map(c=> c.key==='_actions'
+          ? `<th></th>`
+          : `<th data-col="${c.key}" onclick="sortBy('${c.key}')">${c.label} <span class="sort-icon">${SORT_COL===c.key?(SORT_DIR===-1?'↓':'↑'):'↕'}</span></th>`
+        ).join('')}
+      </tr>
+    </thead>
+    <tbody>
+  `;
+
+  for (const r of page) {
+    html += `<tr onclick="openModal(${JSON.stringify(JSON.stringify(r)).slice(1,-1).replace(/'/g,'\\x27')})">`;
+    html += `<td class="doc-num">${esc(r.doc_num||'—')}</td>`;
+
+    const cc = CAT_COLOR[r.cat]||'#888';
+    html += `<td class="doc-type"><span class="cat-badge" style="color:${cc};border-color:${cc}33;background:${cc}11">${esc(r.cat||'')}</span></td>`;
+    html += `<td class="filed">${esc(r.filed||'—')}</td>`;
+    html += `<td class="owner" title="${esc(r.owner||'')}">${esc(r.owner||'—')}</td>`;
+
+    const addr = [r.prop_address, r.prop_city].filter(Boolean).join(', ');
+    html += `<td class="address" title="${esc(addr)}">${esc(addr||'—')}</td>`;
+
+    const amt = r.amount ? '$'+Number(r.amount).toLocaleString('en-US',{minimumFractionDigits:0}) : '—';
+    html += `<td class="amount">${amt}</td>`;
+
+    const s = r.score||0;
+    const sc = s>=70?'score-hi':s>=45?'score-med':'score-lo';
+    html += `<td class="score-cell"><span class="score-pill ${sc}">${s}</span></td>`;
+
+    const flags = (r.flags||[]).slice(0,3).map(f=>`<span class="flag ${FLAG_CLASS[f]||'flag-default'}">${esc(f)}</span>`).join('');
+    html += `<td class="flags-cell"><div class="flags">${flags}</div></td>`;
+
+    html += `<td class="actions" onclick="event.stopPropagation()">`;
+    if (r.clerk_url) html += `<a class="link-btn" href="${esc(r.clerk_url)}" target="_blank">🔗 Doc</a>`;
+    html += `</td>`;
+    html += `</tr>`;
+  }
+
+  html += `</tbody></table>`;
+
+  // Pagination
+  html += `<div class="pagination">
+    <span>${start+1}–${Math.min(start+PAGE_SIZE,FILTERED.length)} of ${FILTERED.length}</span>
+    <div class="page-btns">
+      <button class="page-btn" onclick="goPage(${cur_page-1})" ${cur_page===1?'disabled':''}>‹ Prev</button>`;
+  const pg_start = Math.max(1, cur_page-2);
+  const pg_end   = Math.min(total_pages, cur_page+2);
+  for (let p=pg_start;p<=pg_end;p++) {
+    html += `<button class="page-btn${p===cur_page?' active':''}" onclick="goPage(${p})">${p}</button>`;
+  }
+  html += `<button class="page-btn" onclick="goPage(${cur_page+1})" ${cur_page===total_pages?'disabled':''}>Next ›</button>
+    </div>
+  </div>`;
+
+  wrap.innerHTML = html;
+  wrap.querySelector('thead')?.querySelectorAll('th').forEach(th=>{
+    const col = th.dataset.col;
+    if (col && col===SORT_COL) th.classList.add('sorted');
+  });
+}
+
+function goPage(p) {
+  const tp = Math.ceil(FILTERED.length/PAGE_SIZE);
+  cur_page = Math.max(1, Math.min(p, tp));
+  renderTable();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ── Modal ─────────────────────────────────────────────────────────────────────
+function openModal(json_str) {
+  const r = JSON.parse(json_str);
+  const s = r.score||0;
+  const sc = s>=70?'score-hi':s>=45?'score-med':'score-lo';
+  const flags = (r.flags||[]).map(f=>`<span class="flag ${FLAG_CLASS[f]||'flag-default'}">${esc(f)}</span>`).join('');
+  const cc = CAT_COLOR[r.cat]||'#888';
+  const amt = r.amount ? '$'+Number(r.amount).toLocaleString('en-US',{minimumFractionDigits:0}) : 'N/A';
+
+  document.getElementById('modal-content').innerHTML = `
+    <h2>${esc(r.cat_label||r.cat||'Lead Detail')}</h2>
+    <div class="modal-score">
+      <div class="score-big ${sc}">${s}</div>
+      <div>
+        <div style="font-size:.7rem;color:var(--text-dim);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.07em">Seller Score</div>
+        <div class="flags" style="margin-top:.4rem">${flags}</div>
+      </div>
+    </div>
+    <div class="modal-grid">
+      <div class="modal-field"><label>Doc Number</label><p>${esc(r.doc_num||'—')}</p></div>
+      <div class="modal-field"><label>Doc Type</label><p><span class="cat-badge" style="color:${cc};border-color:${cc}33;background:${cc}11">${esc(r.cat||'')}</span> ${esc(r.doc_type||'')}</p></div>
+      <div class="modal-field"><label>Filed Date</label><p>${esc(r.filed||'—')}</p></div>
+      <div class="modal-field"><label>Amount</label><p>${amt}</p></div>
+      <div class="modal-field full"><label>Owner / Grantor</label><p>${esc(r.owner||'—')}</p></div>
+      <div class="modal-field full"><label>Grantee</label><p>${esc(r.grantee||'—')}</p></div>
+      <div class="modal-field full"><label>Legal Description</label><p style="font-size:.78rem;color:var(--text-dim)">${esc(r.legal||'—')}</p></div>
+      <div class="modal-field"><label>Property Address</label><p>${esc([r.prop_address,r.prop_city,r.prop_state,r.prop_zip].filter(Boolean).join(', ')||'—')}</p></div>
+      <div class="modal-field"><label>Mailing Address</label><p>${esc([r.mail_address,r.mail_city,r.mail_state,r.mail_zip].filter(Boolean).join(', ')||'—')}</p></div>
+      ${r.clerk_url?`<div class="modal-field full"><label>Public Record Link</label><p><a class="link-btn" href="${esc(r.clerk_url)}" target="_blank">🔗 View Document</a></p></div>`:''}
+    </div>
+  `;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(e) { if (e.target.id==='modal') closeModalDirect(); }
+function closeModalDirect() { document.getElementById('modal').classList.remove('open'); }
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModalDirect(); });
+
+// ── CSV export ────────────────────────────────────────────────────────────────
+function exportCSV() {
+  const headers = ['First Name','Last Name','Mailing Address','Mailing City','Mailing State','Mailing Zip',
+    'Property Address','Property City','Property State','Property Zip',
+    'Lead Type','Document Type','Date Filed','Document Number','Amount/Debt Owed',
+    'Seller Score','Motivated Seller Flags','Source','Public Records URL'];
+
+  const rows = FILTERED.map(r => {
+    const nm = splitName(r.owner||'');
+    return [
+      nm[0], nm[1],
+      r.mail_address||'', r.mail_city||'', r.mail_state||'OH', r.mail_zip||'',
+      r.prop_address||'', r.prop_city||'', r.prop_state||'OH', r.prop_zip||'',
+      r.cat_label||'', r.doc_type||'', r.filed||'', r.doc_num||'',
+      r.amount||'', r.score||0,
+      (r.flags||[]).join(' | '),
+      'Summit County Clerk', r.clerk_url||''
+    ];
+  });
+
+  const csv = [headers, ...rows].map(row =>
+    row.map(v => '"'+String(v).replace(/"/g,'""')+'"').join(',')
+  ).join('\n');
+
+  const a   = document.createElement('a');
+  a.href    = 'data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download= 'summit_leads_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+}
+
+function splitName(full) {
+  const parts = full.split(',');
+  if (parts.length>=2) return [parts[1].trim(), parts[0].trim()];
+  const w = full.trim().split(' ');
+  if (w.length>=2) return [w[0], w.slice(1).join(' ')];
+  return [full, ''];
+}
+
+function esc(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+loadData();
+</script>
+</body>
+</html>
