@@ -1,1 +1,8 @@
-records.json contents
+{
+  "fetched_at": null,
+  "source": "Summit County Clerk – summitoh.net",
+  "date_range": {"start": null, "end": null},
+  "total": 0,
+  "with_address": 0,
+  "records": []
+}
