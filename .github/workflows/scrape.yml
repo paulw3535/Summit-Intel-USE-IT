@@ -39,7 +39,7 @@ jobs:
       - name: Run scraper
         env:
           LOOKBACK_DAYS: "7"
-        run: python scraper/fetch.py
+        run: python fetch.py
 
       # ── Commit data files ────────────────────────────────────────────────────
       - name: Commit updated records
